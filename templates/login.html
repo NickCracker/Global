@@ -3,13 +3,22 @@
 {% block body %}
 
 <style>
+    .cuadro{
+        width: 400px;
+        height: 300px;
+        position: absolute;
+        left : 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
     .Formulario{
         background-color: #0d383f;
-        width:400px;
+        border: solid aliceblue;
+        width:300px;
         height: 300px;
         margin: auto auto;
         padding: 40px;
-        padding-top: 4;
+        padding-top: 3;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -20,15 +29,17 @@
 </style>
 
 <body>
-    <div class="Formulario">
-        <form action="/Permitir_acceso", method="POST">
-            <label class="text" style="font-size:xx-large;font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">Invenviewer</label><br><br>
-            <label class="text">Usuario</label><br>
-            <input type="text" name="usuario"><br>
-            <label class="text">Contraseña</label><br>
-            <input type="password" name="contraseña"><br><br>
-            <button type="submit">Ingresar</button>
-        </form>
+    <div class="cuadro">
+        <div class="Formulario">
+            <form action="/Permitir_acceso", method="POST">
+                <label class="text" style="display: flex;justify-content:center; font-size:xx-large;font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">Login</label><br>
+                <label class="text">Usuario</label><br>
+                <input type="text" name="usuario"><br>
+                <label class="text">Contraseña</label><br>
+                <input type="password" name="contraseña"><br><br>
+                <div style="display:flex;justify-content: center;"><button type="submit" class="btn btn-dark">Ingresar</button></div>
+            </form>
+        </div>
     </div>
 </body>
 
