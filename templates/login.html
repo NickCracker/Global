@@ -1,0 +1,37 @@
+{% extends 'layout.html'%}
+
+{% block body %}
+
+<style>
+    .Formulario{
+        background-color: #011700;
+        width:400px;
+        height: 300px;
+        margin: auto auto;
+        padding: 40px;
+        padding-top: 4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .text{
+        color:aliceblue;
+    }
+</style>
+
+<body>
+    <div class="Formulario">
+        <form action="/Permitir_acceso", method="POST">
+            <label class="text" style="font-size:xx-large;font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">Invenviewer</label><br><br>
+            <label class="text">Usuario</label><br>
+            <input type="text" name="usuario"><br>
+            <label class="text">Contraseña</label><br>
+            <input type="password" name="contraseña"><br><br>
+            <button type="submit">Ingresar</button>
+        </form>
+    </div>
+</body>
+
+{% endblock %}
+
+

@@ -1,0 +1,27 @@
+{% extends 'layout.html '%}
+{% block body %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <td style="text-align:center;background-color: #011700; color:aliceblue">Codigo</td>
+            <td style="text-align:center;background-color: #011700; color:aliceblue">Producto</td>
+            <td style="text-align:center;background-color: #011700; color:aliceblue">Stock</td>
+            <td style="text-align:left  ;background-color: #011700; color:aliceblue">Reserva</td>
+            <td style="text-align:center;background-color: #011700; color:aliceblue">Detalles</td>
+        </tr>
+    </thead>
+    <tbody>
+        {%for valor in valores %}
+            <tr>
+                <td>{{ valor.0}}</td>
+                <td style="width: min-content;text-align:center;">{{ valor.3}}</td>
+                <td>{{ valor.1}}</td>
+                <td>{{ valor.2}}</td>
+                <td>
+                    <a href="/detalle/{{valor.0}}" class="btn btn-info">Detalle</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

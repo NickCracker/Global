@@ -1,0 +1,56 @@
+{% extends 'layout.html'%}
+
+{% block body %}
+<style>
+    .pagina{
+        background-color: black;
+        border: solid aliceblue;
+        width: 300px;
+        height: 400px;
+        position: absolute;
+        left : 60%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+    .tarjeta{
+        display: grid;
+        grid-template-columns: 150px 150px;
+        grid-template-rows:  66px 66px 66px 66px 66px 66px;
+    }
+    .imagen{
+        border:solid aliceblue;
+        width: 350px;
+        height: 400px;
+        position: absolute;
+        left : -60%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+    label{
+        color: aliceblue;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: large;
+        font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    }
+</style>
+<div class="pagina">
+    <div class="tarjeta">
+        <label>Titulo</label>
+        <label></label>
+        <label>Clase :</label>
+        <label>{{detalles.4}}</label>
+        <label>Subclase :</label>
+        <label>{{detalles.5}}</label>
+        <label>Laboratorio :</label>
+        <label>{{detalles.6}}</label>
+        <label>Clasificacion :</label>
+        <label>{{detalles.7}}</label>
+        <label>Precio :</label>
+        <label>{{detalles.8}}</label>
+    </div>
+    <div class="imagen">
+    </div>
+</div>
+{% endblock %}
