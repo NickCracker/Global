@@ -22,10 +22,10 @@ def Login():
     return render_template('login.html')
 
 #Redireccion a la pagina de busqueda y consulta de datos
-@app.route('/view')
+@app.route('/busqueda')
 def Buscador():
     cur = conectar_base()
-    cur.execute('SELECT * FROM inve_web')
+    cur.execute('SELECT * FROM inve_web ORDER BY DESCRI_MAT')
     data = cur.fetchall()
     for dato in data:
         dato[1]=int(dato[1])
@@ -54,7 +54,7 @@ def Mostrar_detalle(id):
     data = cur.fetchall()
     return render_template('detalle.html',detalles=data[0])
 
-@app.route('/view/buscar', methods=['POST'])
+@app.route('/busqueda/buscar', methods=['POST'])
 def buscar():
     if request.method == 'POST':
         codigo = request.form['codigo']
