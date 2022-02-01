@@ -1,9 +1,9 @@
 {% extends 'layout.html '%}
 {% block body %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg" style="background-color:#2c3e50">
     <div class="container-fluid">
       <a class="navbar-brand" href="#"><img src="https://raw.githubusercontent.com/NickCracker/Global/main/assets/logo.jpg" style="width: 60px;"><label style="padding-left: 10px;">GLOBAL PHARMA</label></a>
-        <form class="d-flex" action="/view/buscar" method="POST">
+        <form class="d-flex" action="/view/buscar" method="POST" style="padding-right: 15px;">
           <input class="form-control me-sm-2" type="text" placeholder="Codigo" name="codigo">
           <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
         </form>
@@ -14,11 +14,11 @@
     <table class="table table-striped" style="border: #2c3e50 solid ;">
         <thead>
             <tr>
-                <td style="text-align:center;background-color: #2c3e50; color:aliceblue">Codigo</td>
-                <td style="text-align:center;background-color: #2c3e50; color:aliceblue">Producto</td>
-                <td style="text-align:center;background-color: #2c3e50; color:aliceblue">Stock</td>
-                <td style="text-align:left  ;background-color: #2c3e50; color:aliceblue">Reserva</td>
-                <td style="text-align:center;background-color: #2c3e50; color:aliceblue">Detalles</td>
+                <td style="text-align:center;background-color: #00a1f1; color:aliceblue">Codigo</td>
+                <td style="text-align:center;background-color: #00a1f1; color:aliceblue">Producto</td>
+                <td style="text-align:center;background-color: #00a1f1; color:aliceblue">Stock</td>
+                <td style="text-align:left  ;background-color: #00a1f1; color:aliceblue">Reserva</td>
+                <td style="text-align:center;background-color: #00a1f1; color:aliceblue">Detalles</td>
             </tr>
         </thead>
         <tbody>
@@ -29,7 +29,7 @@
                     <td>{{ valor.1}}</td>
                     <td>{{ valor.2}}</td>
                     <td>
-                        <a href="/detalle/{{valor.0}}" class="btn btn-dark">Detalle</a>
+                        <a href="/detalle/{{valor.0}}" class="btn btn-info">Detalle</a>
                     </td>
                 </tr>
             {% endfor %}
