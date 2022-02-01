@@ -1,5 +1,6 @@
 from flask import Flask, redirect, render_template, request, url_for
 import pyodbc
+import re
 
 #Instanciacion del modulo Flask
 app = Flask(__name__)
@@ -54,19 +55,24 @@ def Mostrar_detalle(id):
     data = cur.fetchall()
     return render_template('detalle.html',detalles=data[0])
 
+#Resultados de la busqueda con filtro
 @app.route('/busqueda/buscar', methods=['POST'])
 def buscar():
     if request.method == 'POST':
-        codigo = request.form['codigo']
+        entrada = request.form['entrada']
         cur = conectar_base()
-        cur.execute('SELECT * FROM inve_web WHERE CODIGO=\''+codigo+'\';')
+        cur.execute('SELECT * FROM inve_web;')
         data = cur.fetchall()
+        patron = r"^{0}".format(entrada)
+        resultados = []
         for dato in data:
             dato[1]=int(dato[1])
             dato[2]=int(dato[2])
-        return render_template('buscador.html', valores = data)
+            if re.match(patron,dato[3]) :
+                resultados.append(dato)
+            
+        return render_template('buscador.html', valores = resultados)
         
-
-
+#Inicio del programa
 if __name__ == '__main__' :
     app.run(port=3000,debug=True)
