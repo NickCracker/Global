@@ -78,5 +78,20 @@ def Mostrar_detalle(id):
     data = cur.fetchall()
     return render_template('detalle.html',detalles=data[0])
 
+@app.route('/view/buscar', methods=['POST'])
+def buscar():
+    if request.method == 'POST':
+        codigo = request.form['codigo']
+        cur = conectar_base()
+        cur.execute('SELECT * FROM inve_web WHERE CODIGO=\''+codigo+'\';')
+        data = cur.fetchall()
+        for dato in data:
+            dato[1]=int(dato[1])
+            dato[2]=int(dato[2])
+        
+        return render_template('buscador.html', valores = data)
+        
+
+
 if __name__ == '__main__' :
     app.run(port=3000,debug=True)
