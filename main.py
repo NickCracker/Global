@@ -2,14 +2,19 @@ from flask import Flask, redirect, render_template, request, url_for
 import pyodbc
 import re
 
+# Variables de entorno.
+import os
+from dotenv import load_dotenv
+config = load_dotenv(".env")
+
 #Instanciacion del modulo Flask
 app = Flask(__name__)
 
 #Datos para la conexion con SQL Server
-servidor="192.168.0.97"
-base="Global"
-usuario="globalsql"
-contraseña="010101zxAS"
+servidor = os.environ.get('servidor')
+base = os.environ.get('base')
+usuario = os.environ.get('usuario')
+contraseña = os.environ.get('contraseña')
 
 #Esta funcion permite conectar a la base de datos SQL Server y retorna un curso
 def conectar_base():
