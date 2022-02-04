@@ -61,7 +61,7 @@ def Permitir_acceso():
 @app.route('/detalle/<string:id>')
 def Mostrar_detalle(id):
     cur = conectar_base()
-    cur.execute('SELECT * FROM inve_web where CODIGO = \''+id+'\';')
+    cur.execute('SELECT * FROM detalles_inve where CODIGO = \''+id+'\';')
     data = cur.fetchall()
     return render_template('detalle.html',detalles=data[0])
 
