@@ -1,6 +1,11 @@
 {% extends 'layout.html'%}
 
 {% block body %}
+<script>
+    const image = document.createElement('img')
+    image.src='https://raw.githubusercontent.com/NickCracker/Global/main/assets/Global.png'
+    document.querySelector('.imagen').appendChild(image)
+</script>
 <nav class="navbar navbar-expand-lg" style="background-color:#2c3e50">
     <div class="container-fluid">
         <label class="navbar-brand">
@@ -114,7 +119,6 @@
         </table>
     </div>
     <div class="imagen">
-        <img src="https://raw.githubusercontent.com/NickCracker/Global/main/assets/Global.png" style="width:350px; height:375px;">
     </div>
 </div>
 {% endblock %}
