@@ -2,6 +2,7 @@ from flask import Flask, redirect, render_template, request, url_for
 import pyodbc
 import re
 import json
+import multiprocessing
 
 # Variables de entorno.
 import os
