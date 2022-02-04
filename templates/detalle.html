@@ -3,12 +3,12 @@
 {% block body %}
 <nav class="navbar navbar-expand-lg" style="background-color:#2c3e50">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <label class="navbar-brand" href="#">
             <div class="logo">
                 <img src="https://raw.githubusercontent.com/NickCracker/Global/main/assets/sin.png" style="width: 60px;">
-                <label class="titulo" style="padding-left: 10px;">Global pharma</label>
+                <label class="titulo" style="padding-left: 10px;color:aliceblue;">Global pharma</label>
             </div>
-        </a>
+        </label>
       </div>
     </div>
 </nav>
@@ -18,8 +18,8 @@
         grid-template-columns: 50px 30px;
     }
     .pagina{
-        background-color: #00a1f1;
-        border: solid aliceblue;
+        background-color: aliceblue;
+        border: solid #2c3e50;
         width: 300px;
         height: 400px;
         position: absolute;
@@ -33,27 +33,52 @@
         grid-template-rows:  66px 66px 66px 66px 66px 66px;
     }
     .imagen{
-        border:solid aliceblue;
+        border:solid #2c3e50;
         width: 350px;
         height: 400px;
         position: absolute;
-        left : -60%;
+        left : -59%;
         top: 50%;
         transform: translateX(-50%) translateY(-50%);
     }
     .det{
-        color: aliceblue;
+        color: #2c3e50;
         display: flex;
-        padding-left: 20px;
+        padding-left: 15px;
         align-items: center;
-        font-size: large;
+        font-size: 20px;
+        font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    }
+    .titulo {
+        padding: 10px;
+        font-size: 30px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        word-spacing: 5px;
+        letter-spacing: 2px;
+    }
+
+    .logo {
+        width: 65px;
+        height: 60px;
+        background-color: aliceblue;
+        border: solid black;
+        display: flex;
+        align-items: center;
+    }
+    .titdet{
+        color: #2c3e50;
+        display: flex;
+        padding-left: 10px;
+        padding-top: 20px;
+        justify-content: right;
+        font-size: 20px;
         font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     }
 </style>
 <div class="pagina">
     <div class="tarjeta">
-        <label class="det">DETALLE :</label>
-        <label class="det"></label>
+        <label class="titdet">DETALLE</label>
+        <label class="det">:</label>
         <label class="det">Clase :</label>
         <label class="det" style="justify-content: center;">{{detalles.4}}</label>
         <label class="det">Subclase :</label>
@@ -66,6 +91,7 @@
         <label class="det" style="justify-content: center;">$ {{detalles.8}}</label>
     </div>
     <div class="imagen">
+        <img src="https://raw.githubusercontent.com/NickCracker/Global/main/assets/sin.png" style="width:350px; height:400px;">
     </div>
 </div>
 {% endblock %}
