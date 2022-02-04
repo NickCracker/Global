@@ -2,15 +2,10 @@ from flask import Flask, redirect, render_template, request, url_for
 import pyodbc
 import re
 import json
-import multiprocessing
-
-# Variables de entorno.
-import os
-import venv
 
 #Instanciacion del modulo Flask
 app = Flask(__name__)
-route = 'datos.json'
+route = '.conexion.json'
 
 def carga(ruta):
     with open(ruta) as contenido:
@@ -18,13 +13,12 @@ def carga(ruta):
         return datos    
 
 datos = carga(route)
-print(datos)
 
 #Datos para la conexion con SQL Server
-servidor = "192.168.0.97"
-base = "Global"
-usuario = "globalsql"
-contraseña = "010101zxAS"
+servidor = datos.get('server','')
+base = datos.get('database','')
+usuario = datos.get('user','')
+contraseña = datos.get('password','')
 
 
 #Esta funcion permite conectar a la base de datos SQL Server y retorna un curso
