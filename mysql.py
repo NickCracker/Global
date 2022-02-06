@@ -60,8 +60,9 @@ def buscar():
     if request.method == 'POST':
         entrada = request.form['entrada']
         cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM vista;')
+        cur.execute('SELECT * FROM vista where CODIGO = {0};'.format(entrada))
         data = cur.fetchall()
+        """
         patron = r"^{0}".format(entrada)
         resultados = []
         for dato in data:
@@ -69,8 +70,9 @@ def buscar():
             dato[2]=int(dato[2])
             if re.match(patron,dato[3]) :
                 resultados.append(dato)
+        """
             
-        return render_template('buscador.html', valores = resultados)
+        return render_template('buscador.html', valores = data)
         
 #Inicio del programa
 if __name__ == '__main__' :
