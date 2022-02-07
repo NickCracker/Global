@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, url_for, session
 import pyodbc
 import re
 import json
@@ -34,6 +34,22 @@ def Login():
 @app.route('/registro')
 def Registro():
     return render_template('registro.html')
+
+@app.route('/Registrar', methods=['POST'])
+def Registrar():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        apellido = request.form['apellido']
+        usuario = request.form['usuario']
+        correo = request.form['correo']
+        contraseña = request.form['contraseña']
+        cur = conectar_base()
+        cur.execute('INSERT INTO web_user_inventory VALUES (\'{0}\',\'{1}\',\'{2}\',\'{3}\',\'{4}\');'.format(nombre,apellido,usuario,correo,contraseña))
+        cur.connection.commit()
+        cur.connection.close()
+        return redirect(url_for("Login"))
+    else:
+        return redirect(url_for("Registro"))
 
 #Redireccion a la pagina de busqueda y consulta de datos
 @app.route('/busqueda')
@@ -82,8 +98,7 @@ def buscar():
             dato[1]=int(dato[1])
             dato[2]=int(dato[2])
             if re.match(patron,dato[3]) :
-                resultados.append(dato)
-            
+                resultados.append(dato) 
         return render_template('buscador.html', valores = resultados)
         
 #Inicio del programa

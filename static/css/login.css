@@ -10,8 +10,8 @@
 .login-form {
     background-color: white;
     border: solid #2c3e50;
-    width: 310px;
-    height: 320px;
+    width: 290px;
+    height: 340px;
     margin: auto auto;
     padding: 40px;
     padding-top: 3;
@@ -50,4 +50,12 @@
     border: solid black;
     display: flex;
     align-items: center;
+}
+
+.registro{
+    font-size: smaller;
+    position: absolute;
+    left: 50%;
+    top: 89%;
+    transform: translateX(-50%) translateY(-50%);
 }

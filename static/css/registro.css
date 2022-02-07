@@ -42,7 +42,8 @@
 }
 
 .register-button{
-    padding-top: 12px;
+    padding: 12px;
     display:flex;
-    justify-content: center;
+    justify-content: space-between;
 }
+
