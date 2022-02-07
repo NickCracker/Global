@@ -1,9 +1,25 @@
 
 
 function ver_foto(){
-    var codigo = document.getElementById("codigo")
-    var code = codigo.innerHTML ;
+    var code = document.getElementById("codigo").innerHTML
     var foto = document.getElementById("foto");
-    foto.src = "https://raw.githubusercontent.com/NickCracker/Global/main/assets/Productos/"+code+"/"+code+"_1.jpg";
-    console.log(foto.src)
+    if (parseInt(code,10) <= 67388){
+        foto.src = "https://raw.githubusercontent.com/NickCracker/Global/main/assets/Div1/"+code+"/"+code+"_1.jpg";
+    }
+    else if (parseInt(code,10) <= 256642){
+        foto.src = "https://raw.githubusercontent.com/NickCracker/Global/main/assets/Div2/"+code+"/"+code+"_1.jpg";
+    }
+    else if (parseInt(code,10) <= 257179){
+        foto.src = "https://raw.githubusercontent.com/NickCracker/Global/main/assets/Div3/"+code+"/"+code+"_1.jpg";
+    }
+    else if (parseInt(code,10) <= 1008023){
+        foto.src = "https://raw.githubusercontent.com/NickCracker/Global/main/assets/Div4/"+code+"/"+code+"_1.jpg";
+    }
+    else if (parseInt(code,10) <= 66661102){
+        foto.src = "https://raw.githubusercontent.com/NickCracker/Global/main/assets/Div5/"+code+"/"+code+"_1.jpg";
+    }
+    else{
+        foto.src = "https://raw.githubusercontent.com/NickCracker/Global/main/assets/Div6/"+code+"/"+code+"_1.jpg";
+    }
+    
 }

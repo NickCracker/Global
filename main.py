@@ -20,7 +20,6 @@ base = datos.get('database','')
 usuario = datos.get('user','')
 contraseña = datos.get('password','')
 
-
 #Esta funcion permite conectar a la base de datos SQL Server y retorna un curso
 def conectar_base():
     conexion = pyodbc.connect('DRIVER=ODBC Driver 17 for SQL server;SERVER={0};DATABASE={1};UID={2};PWD={3}'.format(servidor,base,usuario,contraseña))
@@ -31,6 +30,10 @@ def conectar_base():
 @app.route('/')
 def Login():
     return render_template('login.html')
+
+@app.route('/registro')
+def Registro():
+    return render_template('registro.html')
 
 #Redireccion a la pagina de busqueda y consulta de datos
 @app.route('/busqueda')
@@ -52,7 +55,7 @@ def Permitir_acceso():
         cur = conectar_base()
         cur.execute('SELECT * FROM web_user_inventory WHERE USUARIO=\''+usuario+'\' AND CONTRASEÑA=\''+contraseña+'\';')
         data = cur.fetchall()
-        if data is None :
+        if len(data) == 0 :
             return redirect(url_for('Login'))
         else:
             return redirect(url_for('Buscador'))

@@ -1,11 +1,6 @@
 from flask import Flask, redirect, render_template, request, url_for
 from flask_mysqldb import MySQL
-import pyodbc
 import re
-
-# Variables de entorno.
-import os
-import venv
 
 #Instanciacion del modulo Flask
 app = Flask(__name__)
@@ -19,6 +14,20 @@ mysql = MySQL(app)
 
 app.secret_key='mysecretkey'
 
+def Comprobar_acceso():
+    if request.method == 'POST':
+        usuario = request.form['usuario']
+        contraseña = request.form['contraseña']
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM usuarios WHERE USUARIO=\''+usuario+'\' AND CONTRASEÑA=\''+contraseña+'\';')
+        data = cur.fetchall()
+        if len(data)==0:
+            return False
+        else:
+            return True
+    else:
+        return False
+
 #Redireccion al login 
 @app.route('/')
 def Login():
@@ -27,24 +36,21 @@ def Login():
 #Redireccion a la pagina de busqueda y consulta de datos
 @app.route('/busqueda')
 def Buscador():
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM vista ORDER BY DESCRIPCION')
-    data = cur.fetchall()
-    return render_template('buscador.html', valores = data)
+    if Comprobar_acceso():
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM vista ORDER BY DESCRIPCION')
+        data = cur.fetchall()
+        return render_template('buscador.html', valores = data)
+    else:
+        return redirect(url_for("Login"))
 
 #Logica del login, redirecciona al login si hay error y da acceso al buscador si se registra bien
 @app.route('/Permitir_acceso', methods=['POST'])
 def Permitir_acceso():
-    if request.method == 'POST':
-        usuario = request.form['usuario']
-        contraseña = request.form['contraseña']
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM usuarios WHERE USUARIO=\''+usuario+'\' AND CONTRASEÑA=\''+contraseña+'\';')
-        data = cur.fetchall()
-        if data is None :
-            return redirect(url_for('Login'))
-        else:
-            return redirect(url_for('Buscador'))
+    if Comprobar_acceso():
+        return redirect(url_for("Buscador"))
+    else:
+        return redirect(url_for("Login"))
 
 #Redirecciona a la pagina de detalles 
 @app.route('/detalle/<string:id>')
