@@ -12,4 +12,28 @@
       </div>
     </div>
 </nav>
+<body>
+    <div class="register-container">
+        <div class="register-form">
+            <form class="regis" action="/Registrar", method="POST">
+                <div class="register-image">
+                    <img src="https://raw.githubusercontent.com/NickCracker/Global/main/assets/Global.png" style="width: 110px;"><br>
+                </div>
+                <label class="text">Nombre</label><br>
+                <input style="width:300px;" type="text" name="nombre"><br>
+                <label class="text">Apellido</label><br>
+                <input style="width:300px;" type="text" name="apellido"><br>
+                <label class="text">Usuario</label><br>
+                <input style="width:300px;" type="text" name="usuario"><br>
+                <label class="text">Correo</label><br>
+                <input style="width:300px;" type="text" name="correo"><br>
+                <label class="text">Contraseña</label><br>
+                <input style="width:300px;" type="password" name="contraseña"><br>
+                <div class="register-button">
+                    <button type="submit" class="btn btn-info">Registrarse</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
 {% endblock %}

@@ -14,3 +14,35 @@
     display: flex;
     align-items: center;
 }
+
+.register-container {
+    width: 400px;
+    height: 300px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-60%);
+}
+
+.register-form {
+    background-color: white;
+    border: solid #2c3e50;
+    width: 410px;
+    height: 450px;
+    margin: auto auto;
+    padding-top: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-image{
+    display:flex;
+    justify-content:center;
+}
+
+.register-button{
+    padding-top: 12px;
+    display:flex;
+    justify-content: center;
+}
