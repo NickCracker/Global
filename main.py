@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request, url_for, session
+from flask import Flask,redirect,render_template,request,url_for,session
 import pyodbc
 import re
 import json
@@ -6,6 +6,7 @@ import json
 #Instanciacion del modulo Flask
 app = Flask(__name__)
 route = '.conexion.json'
+acceso = False
 
 def carga(ruta):
     with open(ruta) as contenido:
@@ -13,6 +14,7 @@ def carga(ruta):
         return datos    
 
 datos = carga(route)
+app.secret_key = datos.get('clave','')
 
 #Datos para la conexion con SQL Server
 servidor = datos.get('server','')
@@ -54,13 +56,16 @@ def Registrar():
 #Redireccion a la pagina de busqueda y consulta de datos
 @app.route('/busqueda')
 def Buscador():
-    cur = conectar_base()
-    cur.execute('SELECT * FROM inve_web ORDER BY DESCRI_MAT')
-    data = cur.fetchall()
-    for dato in data:
-        dato[1]=int(dato[1])
-        dato[2]=int(dato[2])
-    return render_template('buscador.html', valores = data)
+    if session['user'] != "":
+        cur = conectar_base()
+        cur.execute('SELECT * FROM inve_web ORDER BY DESCRI_MAT')
+        data = cur.fetchall()
+        for dato in data:
+            dato[1]=int(dato[1])
+            dato[2]=int(dato[2])
+        return render_template('buscador.html', valores = data)
+    else:
+        return redirect(url_for("Login"))
 
 #Logica del login, redirecciona al login si hay error y da acceso al buscador si se registra bien
 @app.route('/Permitir_acceso', methods=['POST'])
@@ -74,6 +79,7 @@ def Permitir_acceso():
         if len(data) == 0 :
             return redirect(url_for('Login'))
         else:
+            session['user'] = usuario
             return redirect(url_for('Buscador'))
 
 #Redirecciona a la pagina de detalles 
@@ -87,7 +93,7 @@ def Mostrar_detalle(id):
 #Resultados de la busqueda con filtro
 @app.route('/busqueda/buscar', methods=['POST'])
 def buscar():
-    if request.method == 'POST':
+    if request.method == 'POST' and acceso:
         entrada = request.form['entrada']
         cur = conectar_base()
         cur.execute('SELECT * FROM inve_web;')

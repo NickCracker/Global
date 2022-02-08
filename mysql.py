@@ -1,6 +1,8 @@
 from flask import Flask, redirect, render_template, request, url_for
 from flask_mysqldb import MySQL
 import re
+import crypt
+import json
 
 #Instanciacion del modulo Flask
 app = Flask(__name__)
@@ -11,73 +13,70 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'prueba'
 mysql = MySQL(app)
+route = ".conexion.json"
 
+def carga(ruta):
+    with open(ruta) as contenido:
+        datos = json.load(contenido)
+        return datos    
+datos = carga(route)
 app.secret_key='mysecretkey'
-
-def Comprobar_acceso():
-    if request.method == 'POST':
-        usuario = request.form['usuario']
-        contraseña = request.form['contraseña']
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM usuarios WHERE USUARIO=\''+usuario+'\' AND CONTRASEÑA=\''+contraseña+'\';')
-        data = cur.fetchall()
-        if len(data)==0:
-            return False
-        else:
-            return True
-    else:
-        return False
 
 #Redireccion al login 
 @app.route('/')
 def Login():
     return render_template('login.html')
 
-#Redireccion a la pagina de busqueda y consulta de datos
-@app.route('/busqueda')
-def Buscador():
-    if Comprobar_acceso():
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM vista ORDER BY DESCRIPCION')
-        data = cur.fetchall()
-        return render_template('buscador.html', valores = data)
-    else:
-        return redirect(url_for("Login"))
-
 #Logica del login, redirecciona al login si hay error y da acceso al buscador si se registra bien
 @app.route('/Permitir_acceso', methods=['POST'])
 def Permitir_acceso():
-    if Comprobar_acceso():
-        return redirect(url_for("Buscador"))
+    global acceso
+    acceso = False
+    #salt = datos.get('clave','')
+    if request.method == 'POST':
+        usuario = request.form['usuario']
+        contraseña = request.form['contraseña']
+        #contraseña = crypt.crypt(request.form['contraseña'],salt)
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM usuarios WHERE USUARIO=\''+usuario+'\' AND CONTRASEÑA=\''+contraseña+'\';')
+        data = cur.fetchall()
+        if len(data)!=0:
+            acceso = True
+            return redirect(url_for("Buscador"))
+        else:
+            return redirect(url_for("Login"))
     else:
-        return redirect(url_for("Login"))
+        return False
 
+@app.route('/busqueda')
+def Buscador():
+    try:
+        if acceso:
+            cur = mysql.connection.cursor()
+            cur.execute('SELECT * FROM vista_2 ;')
+            data = cur.fetchall()
+            return render_template('buscador.html', valores = data)
+        else:
+            return redirect(url_for("Login"))
+    except:
+        return redirect(url_for("Login"))
+    
 #Redirecciona a la pagina de detalles 
 @app.route('/detalle/<string:id>')
 def Mostrar_detalle(id):
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM vista where CODIGO = \''+id+'\';')
+    cur.execute('SELECT * FROM vista_2 where CODIGO = \''+id+'\';')
     data = cur.fetchall()
     return render_template('detalle.html',detalles=data[0])
 
 #Resultados de la busqueda con filtro
 @app.route('/busqueda/buscar', methods=['POST'])
 def buscar():
-    if request.method == 'POST':
+    if request.method == 'POST' and acceso:
         entrada = request.form['entrada']
         cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM vista where CODIGO = {0};'.format(entrada))
-        data = cur.fetchall()
-        """
-        patron = r"^{0}".format(entrada)
-        resultados = []
-        for dato in data:
-            dato[1]=int(dato[1])
-            dato[2]=int(dato[2])
-            if re.match(patron,dato[3]) :
-                resultados.append(dato)
-        """
-            
+        cur.execute('SELECT * FROM vista_2 where CODIGO = {0};'.format(entrada))
+        data = cur.fetchall()    
         return render_template('buscador.html', valores = data)
         
 #Inicio del programa
