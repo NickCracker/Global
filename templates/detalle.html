@@ -18,12 +18,13 @@
     <p id="codigo" style="display: none;">{{detalles.0}}</p>
     <div class="detalle-ficha">
         <table class="table table-striped">
-            <thead>
-                <tr class="detalle-tr">
-                    <td class="detalle-td">Detalle</td>
-                </tr>
-            </thead>
             <tbody>
+                <tr class="detalle-tr">
+                    <td class="detalle-td" style="justify-content:center;">Detalles</td>
+                </tr>
+                <tr class="detalle-tr">
+                    <td class="detalle-td">Codigo: {{detalles.0}}</td>
+                </tr>
                 <tr class="detalle-tr">
                     <td class="detalle-td">Clase : {{detalles.4}}</td>
                 </tr>
@@ -34,24 +35,24 @@
                     <td class="detalle-td">Laboratorio : {{detalles.6}}</td>
                 </tr>
                 <tr class="detalle-tr">
-                    <td class="detalle-td">Clasificacion : {{detalles.7}}</td>
+                    <td class="detalle-td">Bodega : {{detalles.8}}</td>
                 </tr>
                 <tr class="detalle-tr">
-                    <td class="detalle-td">Precio : ${{detalles.8}}</td>
+                    <td class="detalle-td">Ubicacion : {{detalles.9}}</td>
                 </tr>
                 <tr class="detalle-tr">
-                    <td class="detalle-td">Bodega : {{detalles.11}}</td>
-                </tr>
-                <tr class="detalle-tr">
-                    <td class="detalle-td">Ubicacion : {{detalles.12}}</td>
+                    <td class="detalle-td">Precio : ${{detalles.7}}</td>
                 </tr>
             </tbody>
         </table>
     </div>
     <div class="detalle-image">
-        <button type="submit" onclick="ver_foto()"><<<</button>
-        <img id="foto" width="200px" height="200px">
-        <button type="submit" onclick="ver_foto()">>>></button>
+        <a href="#imagen"><img id="foto" width="296px" height="326px"></a>
     </div>
+    <article class="light-box" id="imagen">
+        <img id="foto2" alt="">
+        <a href="" class="close">X</a>
+      </article>
+      
 </div>
 {% endblock %}

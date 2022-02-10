@@ -13,3 +13,27 @@
     display: flex;
     align-items: center;
 }
+
+.head-item{
+    border: solid 1px #2c3e50;
+    height: 50px;
+    text-align: center;
+    align-items: center;
+    width: 50px;
+}
+
+.head-item-boton{
+    border: solid 1px #2c3e50;
+    height: 55px;
+    width: auto;
+    display:flex;
+    justify-content:center;
+    align-items: center;
+}
+
+.head-item-product{
+    border: solid 1px #2c3e50;
+    font-size: small;
+    width: 20%;
+    padding: auto;
+}

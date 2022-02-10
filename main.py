@@ -46,7 +46,7 @@ def Registrar():
         correo = request.form['correo']
         contraseña = request.form['contraseña']
         cur = conectar_base()
-        cur.execute('INSERT INTO web_user_inventory VALUES (\'{0}\',\'{1}\',\'{2}\',\'{3}\',\'{4}\');'.format(nombre,apellido,usuario,correo,contraseña))
+        cur.execute('INSERT INTO users_web VALUES (\'{0}\',\'{1}\',\'{2}\',\'{3}\',\'{4}\');'.format(nombre,apellido,usuario,correo,contraseña))
         cur.connection.commit()
         cur.connection.close()
         return redirect(url_for("Login"))
@@ -58,37 +58,15 @@ def Registrar():
 def Buscador():
     if session['user'] != "":
         cur = conectar_base()
-        cur.execute('SELECT * FROM inve_web ORDER BY DESCRI_MAT')
+        cur.execute('SELECT * FROM inve_web ORDER BY DESCRIPCION_P;')
         data = cur.fetchall()
         for dato in data:
             dato[1]=int(dato[1])
             dato[2]=int(dato[2])
+            dato[7]=int(dato[7])
         return render_template('buscador.html', valores = data)
     else:
         return redirect(url_for("Login"))
-
-#Logica del login, redirecciona al login si hay error y da acceso al buscador si se registra bien
-@app.route('/Permitir_acceso', methods=['POST'])
-def Permitir_acceso():
-    if request.method == 'POST':
-        usuario = request.form['usuario']
-        contraseña = request.form['contraseña']
-        cur = conectar_base()
-        cur.execute('SELECT * FROM web_user_inventory WHERE USUARIO=\''+usuario+'\' AND CONTRASEÑA=\''+contraseña+'\';')
-        data = cur.fetchall()
-        if len(data) == 0 :
-            return redirect(url_for('Login'))
-        else:
-            session['user'] = usuario
-            return redirect(url_for('Buscador'))
-
-#Redirecciona a la pagina de detalles 
-@app.route('/detalle/<string:id>')
-def Mostrar_detalle(id):
-    cur = conectar_base()
-    cur.execute('SELECT * FROM detalles_inve where CODIGO = \''+id+'\';')
-    data = cur.fetchall()
-    return render_template('detalle.html',detalles=data[0])
 
 #Resultados de la busqueda con filtro
 @app.route('/busqueda/buscar', methods=['POST'])
@@ -105,7 +83,32 @@ def buscar():
             dato[2]=int(dato[2])
             if re.match(patron,dato[3]) :
                 resultados.append(dato) 
+            dato[7]=int(dato[7])
         return render_template('buscador.html', valores = resultados)
+
+#Logica del login, redirecciona al login si hay error y da acceso al buscador si se registra bien
+@app.route('/Permitir_acceso', methods=['POST'])
+def Permitir_acceso():
+    if request.method == 'POST':
+        usuario = request.form['usuario']
+        contraseña = request.form['contraseña']
+        cur = conectar_base()
+        cur.execute('SELECT * FROM users_web WHERE USUARIO=\''+usuario+'\' AND CONTRASEÑA=\''+contraseña+'\';')
+        data = cur.fetchall()
+        if len(data) == 0 :
+            return redirect(url_for('Login'))
+        else:
+            session['user'] = usuario
+            return redirect(url_for('Buscador'))
+
+#Redirecciona a la pagina de detalles 
+@app.route('/detalle/<string:id>')
+def Mostrar_detalle(id):
+    cur = conectar_base()
+    cur.execute('SELECT * FROM inve_web where CODIGO = \''+id+'\';')
+    data = cur.fetchall()
+    return render_template('detalle.html',detalles=data[0])
+
         
 #Inicio del programa
 if __name__ == '__main__' :

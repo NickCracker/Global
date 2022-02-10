@@ -1,7 +1,6 @@
 from flask import Flask, redirect, render_template, request, url_for
 from flask_mysqldb import MySQL
 import re
-import crypt
 import json
 
 #Instanciacion del modulo Flask
@@ -32,11 +31,9 @@ def Login():
 def Permitir_acceso():
     global acceso
     acceso = False
-    #salt = datos.get('clave','')
     if request.method == 'POST':
         usuario = request.form['usuario']
         contraseña = request.form['contraseña']
-        #contraseña = crypt.crypt(request.form['contraseña'],salt)
         cur = mysql.connection.cursor()
         cur.execute('SELECT * FROM usuarios WHERE USUARIO=\''+usuario+'\' AND CONTRASEÑA=\''+contraseña+'\';')
         data = cur.fetchall()
@@ -53,7 +50,7 @@ def Buscador():
     try:
         if acceso:
             cur = mysql.connection.cursor()
-            cur.execute('SELECT * FROM vista_2 ;')
+            cur.execute('SELECT * FROM INVE_WEB ;')
             data = cur.fetchall()
             return render_template('buscador.html', valores = data)
         else:
@@ -65,7 +62,7 @@ def Buscador():
 @app.route('/detalle/<string:id>')
 def Mostrar_detalle(id):
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM vista_2 where CODIGO = \''+id+'\';')
+    cur.execute('SELECT * FROM INVE_WEB where CODIGO = \''+id+'\';')
     data = cur.fetchall()
     return render_template('detalle.html',detalles=data[0])
 
@@ -75,7 +72,7 @@ def buscar():
     if request.method == 'POST' and acceso:
         entrada = request.form['entrada']
         cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM vista_2 where CODIGO = {0};'.format(entrada))
+        cur.execute('SELECT * FROM INVE_WEB where CODIGO = {0};'.format(entrada))
         data = cur.fetchall()    
         return render_template('buscador.html', valores = data)
         

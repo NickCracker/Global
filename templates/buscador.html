@@ -20,22 +20,22 @@
     <table class="table table-striped" style="border: #2c3e50 solid ;">
         <thead>
             <tr>
-                <td style="text-align:center;background-color: #00a1f1; color:aliceblue">Codigo</td>
-                <td style="text-align:center;background-color: #00a1f1; color:aliceblue">Producto</td>
-                <td style="text-align:center;background-color: #00a1f1; color:aliceblue">Stock</td>
-                <td style="text-align:left  ;background-color: #00a1f1; color:aliceblue">Reserva</td>
-                <td style="text-align:center;background-color: #00a1f1; color:aliceblue">Detalles</td>
+                <td class="head-item" style="text-align:center;background-color: #00a1f1; color:aliceblue">Codigos</td>
+                <td class="head-item" style="text-align:center;background-color: #00a1f1; color:aliceblue">Productos</td>
+                <td class="head-item" style="text-align:center;background-color: #00a1f1; color:aliceblue">Stock</td>
+                <td class="head-item" style="text-align:center;background-color: #00a1f1; color:aliceblue">Reserva</td>
+                <td class="head-item" style="text-align:center;background-color: #00a1f1; color:aliceblue">Detalles</td>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="tbody">
             {%for valor in valores %}
                 <tr>
-                    <td>{{ valor.0}}</td>
-                    <td style="width: min-content;text-align:center;">{{ valor.3}}</td>
-                    <td>{{ valor.1}}</td>
-                    <td>{{ valor.2}}</td>
-                    <td>
-                        <a href="/detalle/{{valor.0}}" class="btn btn-info">Detalle</a>
+                    <td class="head-item">{{ valor.0}}</td>
+                    <td class="head-item-product">{{ valor.3}}</td>
+                    <td class="head-item">{{ valor.1}}</td>
+                    <td class="head-item">{{ valor.2}}</td>
+                    <td class="head-item-boton">
+                        <a href="/detalle/{{valor.0}}" class="btn btn-outline-primary" style="display:flex; justify-content:center; align-items:center;height:25px; width:65px;">Detalle</a>
                     </td>
                 </tr>
             {% endfor %}
