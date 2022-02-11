@@ -16,7 +16,7 @@
     </div>
 </nav>
 
-<div class="container pt-5">
+<div class="container pt-5" style="width: 85%;">
     <table class="table table-striped" style="border: #2c3e50 solid ;">
         <thead>
             <tr>
@@ -27,14 +27,14 @@
                 <td class="head-item" style="text-align:center;background-color: #00a1f1; color:aliceblue">Detalles</td>
             </tr>
         </thead>
-        <tbody class="tbody">
+        <tbody>
             {%for valor in valores %}
                 <tr>
-                    <td class="head-item">{{ valor.0}}</td>
-                    <td class="head-item-product">{{ valor.3}}</td>
-                    <td class="head-item">{{ valor.1}}</td>
-                    <td class="head-item">{{ valor.2}}</td>
-                    <td class="head-item-boton">
+                    <td style="border: 1px solid black;text-align:center;">{{ valor.0}}</td>
+                    <td style="border: 1px solid black;text-align:left;">{{ valor.3}}</td>
+                    <td style="border: 1px solid black;text-align:center;">{{ valor.1}}</td>
+                    <td style="border: 1px solid black;text-align:center;">{{ valor.2}}</td>
+                    <td style="border: 1px solid black;padding:10px; padding: left 10px;">
                         <a href="/detalle/{{valor.0}}" class="btn btn-outline-primary" style="display:flex; justify-content:center; align-items:center;height:25px; width:65px;">Detalle</a>
                     </td>
                 </tr>

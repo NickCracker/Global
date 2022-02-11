@@ -1,18 +1,21 @@
-from flask import Flask,redirect,render_template,request,url_for,session
-import pyodbc
-import re
-import json
+from flask import Flask             #Microframework para trabajar en la web con python
+from flask import redirect          #Para poder redireccionar de una pagina a otra
+from flask import render_template   #Para poder renderizar las paginas
+from flask import request           #Para obtener valores de los formularios
+from flask import url_for           #Para obtener la url de algun elemento(funciones)
+from flask import make_response     #Para realizar respuestas al servidor
+from flask import session           #Para crear y eliminar sesiones
+import pyodbc                       #Para conectarse a la base de datos de SQL Server
+import re                           #Para verificar entradas validas
+import json                         #Para utilizar archivos JSON
 
 #Instanciacion del modulo Flask
 app = Flask(__name__)
 route = '.conexion.json'
-acceso = False
-
 def carga(ruta):
     with open(ruta) as contenido:
         datos = json.load(contenido)
         return datos    
-
 datos = carga(route)
 app.secret_key = datos.get('clave','')
 
@@ -27,6 +30,8 @@ def conectar_base():
     conexion = pyodbc.connect('DRIVER=ODBC Driver 17 for SQL server;SERVER={0};DATABASE={1};UID={2};PWD={3}'.format(servidor,base,usuario,contraseña))
     cursor = conexion.cursor()
     return cursor
+
+#<-------------------------------------------PAGINA WEB-------------------------------------------------->
 
 #Redireccion al login 
 @app.route('/')
@@ -53,6 +58,10 @@ def Registrar():
     else:
         return redirect(url_for("Registro"))
 
+@app.route('/Volver')
+def Volver():
+    return redirect(url_for("Login"))
+
 #Redireccion a la pagina de busqueda y consulta de datos
 @app.route('/busqueda')
 def Buscador():
@@ -71,7 +80,7 @@ def Buscador():
 #Resultados de la busqueda con filtro
 @app.route('/busqueda/buscar', methods=['POST'])
 def buscar():
-    if request.method == 'POST' and acceso:
+    if request.method == 'POST':
         entrada = request.form['entrada']
         cur = conectar_base()
         cur.execute('SELECT * FROM inve_web;')
@@ -81,7 +90,7 @@ def buscar():
         for dato in data:
             dato[1]=int(dato[1])
             dato[2]=int(dato[2])
-            if re.match(patron,dato[3]) :
+            if re.match(patron.upper(),dato[3]) :
                 resultados.append(dato) 
             dato[7]=int(dato[7])
         return render_template('buscador.html', valores = resultados)
@@ -109,7 +118,6 @@ def Mostrar_detalle(id):
     data = cur.fetchall()
     return render_template('detalle.html',detalles=data[0])
 
-        
 #Inicio del programa
 if __name__ == '__main__' :
     app.run(port=3000,debug=True)
