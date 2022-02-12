@@ -1,13 +1,12 @@
-from flask import Flask             #Microframework para trabajar en la web con python
-from flask import redirect          #Para poder redireccionar de una pagina a otra
-from flask import render_template   #Para poder renderizar las paginas
-from flask import request           #Para obtener valores de los formularios
-from flask import url_for           #Para obtener la url de algun elemento(funciones)
-from flask import make_response     #Para realizar respuestas al servidor
-from flask import session           #Para crear y eliminar sesiones
-import pyodbc                       #Para conectarse a la base de datos de SQL Server
-import re                           #Para verificar entradas validas
-import json                         #Para utilizar archivos JSON
+from flask import Flask             
+from flask import redirect          
+from flask import render_template   
+from flask import request           
+from flask import url_for           
+from flask import session           
+import pyodbc                       
+import re                           
+import json                         
 
 #Instanciacion del modulo Flask
 app = Flask(__name__)
@@ -32,16 +31,39 @@ def conectar_base():
     return cursor
 
 #<-------------------------------------------PAGINA WEB-------------------------------------------------->
+"""
+@app.before_request
+def before_request():
+    if 'username' not in session and request.endpoint not in ['Login']:
+        return redirect(url_for('Login'))
+"""
 
-#Redireccion al login 
+#PAGINA .1 INICIO DEL SITIO : RENDERIZADO
 @app.route('/')
 def Login():
     return render_template('login.html')
 
+#PAGINA .1 LOGIN AL INICIO DE SITIO : LOGICA BACKEND
+@app.route('/Permitir_acceso', methods=['POST'])
+def Permitir_acceso():
+    if request.method == 'POST':
+        usuario = request.form['usuario']
+        contraseña = request.form['contraseña']
+        cur = conectar_base()
+        cur.execute('SELECT * FROM users_web WHERE USUARIO=\''+usuario+'\' AND CONTRASEÑA=\''+contraseña+'\';')
+        data = cur.fetchall()
+        if len(data) == 0 :
+            return redirect(url_for('Login'))
+        else:
+            session['username']=request.form['usuario']
+            return redirect(url_for('Buscador'))
+
+#PAGINA .2 REGISTRO PARA USUARIOS NUEVOS : RENDERIZADO
 @app.route('/registro')
 def Registro():
     return render_template('registro.html')
 
+#PAGINA .2 REGISTRO PARA USUARIOS NUEVOS : LOGICA BACKEND
 @app.route('/Registrar', methods=['POST'])
 def Registrar():
     if request.method == 'POST':
@@ -58,26 +80,24 @@ def Registrar():
     else:
         return redirect(url_for("Registro"))
 
+#PAGINA .2 REGISTRO PARA USUARIOS NUEVOS : LOGICA BACKEND
 @app.route('/Volver')
 def Volver():
     return redirect(url_for("Login"))
 
-#Redireccion a la pagina de busqueda y consulta de datos
+#PAGINA .3 STOCK DE LOS PRODUCTOS : RENDERIZADO Y LOGICA BASICA
 @app.route('/busqueda')
 def Buscador():
-    if session['user'] != "":
-        cur = conectar_base()
-        cur.execute('SELECT * FROM inve_web ORDER BY DESCRIPCION_P;')
-        data = cur.fetchall()
-        for dato in data:
-            dato[1]=int(dato[1])
-            dato[2]=int(dato[2])
-            dato[7]=int(dato[7])
-        return render_template('buscador.html', valores = data)
-    else:
-        return redirect(url_for("Login"))
+    cur = conectar_base()
+    cur.execute('SELECT * FROM inve_web ORDER BY DESCRIPCION_P;')
+    data = cur.fetchall()
+    for dato in data:
+        dato[1]=int(dato[1])
+        dato[2]=int(dato[2])
+        dato[7]=int(dato[7])
+    return render_template('buscador.html', valores = data)
 
-#Resultados de la busqueda con filtro
+#PAGINA .3 STOCK DE LOS PRODUCTOS CON BUSQUEDA : RENDERIZADO Y LOGICA
 @app.route('/busqueda/buscar', methods=['POST'])
 def buscar():
     if request.method == 'POST':
@@ -92,32 +112,20 @@ def buscar():
             dato[2]=int(dato[2])
             if re.match(patron.upper(),dato[3]) :
                 resultados.append(dato) 
-            dato[7]=int(dato[7])
         return render_template('buscador.html', valores = resultados)
 
-#Logica del login, redirecciona al login si hay error y da acceso al buscador si se registra bien
-@app.route('/Permitir_acceso', methods=['POST'])
-def Permitir_acceso():
-    if request.method == 'POST':
-        usuario = request.form['usuario']
-        contraseña = request.form['contraseña']
-        cur = conectar_base()
-        cur.execute('SELECT * FROM users_web WHERE USUARIO=\''+usuario+'\' AND CONTRASEÑA=\''+contraseña+'\';')
-        data = cur.fetchall()
-        if len(data) == 0 :
-            return redirect(url_for('Login'))
-        else:
-            session['user'] = usuario
-            return redirect(url_for('Buscador'))
-
-#Redirecciona a la pagina de detalles 
-@app.route('/detalle/<string:id>')
-def Mostrar_detalle(id):
+#PAGINA .4 DETALLES DE LOS PRODUCTOS : RENDERIZADO 
+@app.route('/detalle/<string:id>/<string:bodega>')
+def Mostrar_detalle(id,bodega):
     cur = conectar_base()
-    cur.execute('SELECT * FROM inve_web where CODIGO = \''+id+'\';')
+    cur.execute('SELECT * FROM inve_web where CODIGO = \''+id+'\' AND DESCRIPCION_B = \''+bodega+'\';')
     data = cur.fetchall()
+    for dato in data:
+            dato[1]=int(dato[1])
+            dato[2]=int(dato[2])
+            dato[7]=int(dato[7])
     return render_template('detalle.html',detalles=data[0])
 
-#Inicio del programa
+#ARRANQUE DE LA APLICACION
 if __name__ == '__main__' :
     app.run(port=3000,debug=True)

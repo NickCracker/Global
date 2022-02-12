@@ -8,6 +8,8 @@ nav{
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     word-spacing: 5px;
     letter-spacing: 2px;
+    padding-left: 10px;
+    color:aliceblue;
 }
 
 .logo {
@@ -20,8 +22,7 @@ nav{
 }
 .detalle-container{
     background-color: aliceblue;
-    border: solid #2c3e50;
-    width: 320px;
+    width: 317px;
     height: 330px;
     position: absolute;
     left : 62%;
@@ -39,9 +40,6 @@ nav{
     display: flex;
     justify-content: center;
     align-items: center;
-}
-.detalle-ficha{
-    display: flex;
 }
 .detalle-td{
     display: flex;
