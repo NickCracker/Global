@@ -1,45 +1,114 @@
-{% extends 'layout.html '%}
-{% block body %}
-<nav class="navbar navbar-expand-lg" style="background-color:#2c3e50">
-    <div class="container-fluid">
-        <label class="navbar-brand" href="#">
-            <div class="logo">
-                <img src="https://raw.githubusercontent.com/NickCracker/Global/main/assets/Global.png" style="width: 60px;">
-                <label class="titulo">Global pharma</label>
-            </div>
-        </label>
-        <form class="d-flex" action="/busqueda/buscar" method="POST" style="padding-right: 15px;">
-          <input class="form-control me-sm-2" type="text" placeholder="" name="entrada">
-          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
-        </form>
-      </div>
-    </div>
-</nav>
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="buscador-container">
-    <table class="table table-striped" style="border: #2c3e50 solid ;">
-        <thead>
-            <tr>
-                <td class="head-item" style="text-align:center;background-color: #00a1f1; color:aliceblue">Codigos</td>
-                <td class="head-item" style="text-align:center;background-color: #00a1f1; color:aliceblue">Productos</td>
-                <td class="head-item" style="text-align:center;background-color: #00a1f1; color:aliceblue">Stock</td>
-                <td class="head-item" style="text-align:center;background-color: #00a1f1; color:aliceblue">Reserva</td>
-                <td class="head-item" style="text-align:center;background-color: #00a1f1; color:aliceblue">Detalles</td>
-            </tr>
-        </thead>
-        <tbody>
-            {%for valor in valores %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://bootswatch.com/5/flatly/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/buscador.css') }}">
+    <title>Inventario Global</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg" style="background-color:#2c3e50">
+        <div class="container-fluid">
+            <label class="navbar-brand" href="#">
+                <div class="logo">
+                    <img src="{{ url_for('static',filename='img/Global.PNG')}}" style="width: 60px;">
+                    <label class="titulo">Global pharma</label>
+                </div>
+            </label>
+            <form class="d-flex" action="/busqueda/buscar/1" method="POST" style="padding-right: 15px;">
+                <input class="form-control me-sm-2" type="text" placeholder="" name="entrada">
+                <button class="btn btn-info my-2 my-sm-0" type="submit">Buscar</button>
+            </form>
+        </div>
+        </div>
+    </nav>
+    <div class="buscador-container">
+        <table class="table table-striped" style="border: #2c3e50 solid ;">
+            <thead>
                 <tr>
-                    <td style="border: 1px solid black;text-align:center;">{{ valor.0}}</td>
-                    <td style="border: 1px solid black;text-align:left;">{{ valor.3}}</td>
-                    <td style="border: 1px solid black;text-align:center;">{{ valor.1}}</td>
-                    <td style="border: 1px solid black;text-align:center;">{{ valor.2}}</td>
-                    <td style="border: 1px solid black;padding:10px; padding: left 10px;">
-                        <a href="/detalle/{{valor.0}}/{{valor.8}}" class="btn btn-outline-primary" style="display:flex; justify-content:center; align-items:center;height:25px; width:65px;">Detalle</a>
+                    <td class="head-item" style="background-color: #00a1f1; color:aliceblue; ">Codigos</td>
+                    <td class="head-item" style="background-color: #00a1f1; color:aliceblue; " >Lote</td>
+                    <td class="head-item" style="background-color: #00a1f1; color:aliceblue; ">Productos</td>
+                    <td class="head-item" style="background-color: #00a1f1; color:aliceblue; ">Stock</td>
+                    <td class="head-item" style="background-color: #00a1f1; color:aliceblue; ">Reserva</td>
+                    <td class="head-item" style="background-color: #00a1f1; color:aliceblue; ">Disponible</td>
+                    <td class="head-item" style="background-color: #00a1f1; color:aliceblue; ">Detalles</td>
+                </tr>
+            </thead>
+            <tbody>
+                {%for producto in productos.items %}
+                <tr>
+                    <td class="head-item" >{{ producto.codigo}}</td>
+                    <td class="head-item" >{{ producto.lote}}</td>
+                    <td class="head-item" >{{ producto.descripcion | title}}</td>
+                    <td class="head-item" >{{ producto.stock | int}}</td>
+                    <td class="head-item" >{{ producto.reserva | int}}</td>
+                    <td class="head-item" >{{ (producto.stock - producto.reserva) | int }}</td>
+                    <td class="head-item" >
+                        <a href="/detalle/{{producto.codigo}}/{{producto.lote}}" class="btn btn-outline-primary"
+                            style="display:flex; justify-content:center; align-items:center;height:25px; width:65px;">Detalle</a>
                     </td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-{% endblock %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <footer style="display:flex ; justify-content:center">
+            <div>
+                <ul class="pagination pagination-lg" style="padding-top: 10px;">
+                    <li class="page-item">
+                        {% if normal %}
+                            {% if pagina-5>0 %}
+                                <a class="page-link" href="/busqueda/{{pagina-5}}"><<</a>
+                            {% else %}
+                                <a class="page-link" href="/busqueda/1"><<</a>
+                            {% endif %}  
+                        {% else %}
+                            {% if pagina <= 1 %}
+                                <a class="page-link" href="/busqueda/buscar/{{entrada}}/1"><<</a>
+                            {% else %}
+                                <a class="page-link" href="/busqueda/buscar/{{entrada}}/{{pagina - 1}}"><<</a>
+                            {% endif %}  
+                        {% endif %}
+                    </li>
+                    <li class="page-item">
+                        {% if normal %}
+                            {% if pagina <= 1 %}
+                                <a class="page-link" href="/busqueda/1"><</a>
+                            {% else %}
+                                <a class="page-link" href="/busqueda/{{pagina - 1}}"><</a>
+                            {% endif %}  
+                        {% else %}
+                            {% if pagina <= 1 %}
+                                <a class="page-link" href="/busqueda/buscar/{{entrada}}/1"><</a>
+                            {% else %}
+                                <a class="page-link" href="/busqueda/buscar/{{entrada}}/{{pagina - 1}}"><</a>
+                            {% endif %}  
+                        {% endif %}
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">{{pagina}}</a>
+                    </li>
+                    <li class="page-item">
+                        {% if normal %}
+                            <a class="page-link" href="/busqueda/{{pagina + 1}}">></a>
+                        {% else %}
+                            <a class="page-link" href="/busqueda/buscar/{{entrada}}/{{pagina + 1}}">></a>
+                        {% endif %}
+                    </li>
+                    <li class="page-item">
+                        {% if normal %}
+                            <a class="page-link" href="/busqueda/{{pagina + 5}}">>></a>
+                        {% else %}
+                            <a class="page-link" href="/busqueda/buscar/{{entrada}}/{{pagina + 5}}">>></a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

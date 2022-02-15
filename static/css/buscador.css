@@ -1,10 +1,10 @@
 .titulo{
     padding: 10px;
-    font-size: 30px;
+    font-size: 45px;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     word-spacing: 5px;
     letter-spacing: 2px;
-    padding-left: 10px; 
+    padding-left: 15px; 
     color: aliceblue
 }
 .logo{
@@ -22,25 +22,7 @@
 }
 
 .head-item{
-    border: solid 1px #2c3e50;
-    height: 50px;
+    border: 1px solid black;
     text-align: center;
-    align-items: center;
-    width: 50px;
-}
-
-.head-item-boton{
-    border: solid 1px #2c3e50;
-    height: 55px;
-    width: auto;
-    display:flex;
-    justify-content:center;
-    align-items: center;
-}
-
-.head-item-product{
-    border: solid 1px #2c3e50;
-    font-size: small;
-    width: 20%;
-    padding: auto;
+    font-family:Arial, Helvetica, sans-serif;
 }
