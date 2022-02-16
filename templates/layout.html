@@ -25,6 +25,55 @@
             margin-bottom: auto;
         }
     </style>
+    <ul class="pagination pagination-lg" style="padding-top: 10px;">
+        <li class="page-item">
+            {% if normal %}
+                {% if pagina-5>0 %}
+                    <a class="page-link" href="/busqueda/{{pagina-5}}"><<</a>
+                {% else %}
+                    <a class="page-link" href="/busqueda/1"><<</a>
+                {% endif %}  
+            {% else %}
+                {% if pagina <= 1 %}
+                    <a class="page-link" href="/busqueda/buscar/{{entrada}}/1"><<</a>
+                {% else %}
+                    <a class="page-link" href="/busqueda/buscar/{{entrada}}/{{pagina - 1}}"><<</a>
+                {% endif %}  
+            {% endif %}
+        </li>
+        <li class="page-item">
+            {% if normal %}
+                {% if pagina <= 1 %}
+                    <a class="page-link" href="/busqueda/1"><</a>
+                {% else %}
+                    <a class="page-link" href="/busqueda/{{pagina - 1}}"><</a>
+                {% endif %}  
+            {% else %}
+                {% if pagina <= 1 %}
+                    <a class="page-link" href="/busqueda/buscar/{{entrada}}/1"><</a>
+                {% else %}
+                    <a class="page-link" href="/busqueda/buscar/{{entrada}}/{{pagina - 1}}"><</a>
+                {% endif %}  
+            {% endif %}
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">{{pagina}}</a>
+        </li>
+        <li class="page-item">
+            {% if normal %}
+                <a class="page-link" href="/busqueda/{{pagina + 1}}">></a>
+            {% else %}
+                <a class="page-link" href="/busqueda/buscar/{{entrada}}/{{pagina + 1}}">></a>
+            {% endif %}
+        </li>
+        <li class="page-item">
+            {% if normal %}
+                <a class="page-link" href="/busqueda/{{pagina + 5}}">>></a>
+            {% else %}
+                <a class="page-link" href="/busqueda/buscar/{{entrada}}/{{pagina + 5}}">>></a>
+            {% endif %}
+        </li>
+    </ul>
     
     {% block body %}
     {% endblock %}

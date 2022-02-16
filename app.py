@@ -1,4 +1,7 @@
 #Importaciones
+import json
+import random
+import re
 from sqlalchemy import Integer, String
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
@@ -8,8 +11,8 @@ from flask import url_for
 from flask import render_template
 from flask import request
 from flask import session
-import json
-import pymysql
+from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash
 
 #Funcion de carga de datos JSON
 route = '.conexion.json'
@@ -20,16 +23,17 @@ def carga(ruta):
 datos = carga(route)
 
 #Datos para la conexion con SQL Server
-servidor = datos.get('server','')
-base = datos.get('database','')
-usuario = datos.get('user','')
-contraseña = datos.get('password','')
+s = datos.get('server','')
+b = datos.get('database','')
+u = datos.get('user','')
+c = datos.get('password','')
+d = datos.get('driver','')
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://root@localhost/prueba'
+app.config['SQLALCHEMY_DATABASE_URI']='mssql+pyodbc://{0}:{1}@{2}/{3}?driver={4}'.format(u,c,s,b,d)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
-app.config['MAIL_SERVER']='smtp.gmail.com'
-app.config['MAIL_PORT']=587
+app.config['MAIL_SERVER']= 'smtp.gmail.com'
+app.config['MAIL_PORT']= 587
 app.config['MAIL_USE_SSL']=False
 app.config['MAIL_USE_TLS']=True
 app.config['MAIL_USERNAME']=datos.get('correo','')
@@ -39,7 +43,7 @@ db = SQLAlchemy(app)
 mail = Mail()
 
 class Producto(db.Model):
-    __tablename__ = 'new_inve_web'
+    __tablename__ = 'NEW_INVE_WEB'
     codigo=db.Column(String(50),primary_key=True)
     descripcion=db.Column(String(150))
     stock=db.Column(Integer())
@@ -53,9 +57,10 @@ class Producto(db.Model):
     ubicacion=db.Column(String(50))
 
 class Usuario(db.Model):
-    __tablename__ = 'usuarios'
+    __tablename__ = 'USERS_WEB'
     correo=db.Column(String(50),primary_key=True)
     nombre=db.Column(String(50))
+    apellido=db.Column(String(50))
     usuario=db.Column(String(50))
     contraseña=db.Column(String(50))
     
@@ -67,7 +72,8 @@ app.secret_key=datos.get("clave","")
 @app.route('/')
 def Login():
     if 'username' in session:
-        return redirect(url_for('Buscador'))
+        session.pop('username')
+        return redirect(url_for('Login'))
     else:
         return render_template('login.html')
 
@@ -94,15 +100,19 @@ def Registro():
 def Registrar():
     if request.method == 'POST':
         nombre = request.form['nombre']
+        apellido = request.form['apellido']
         usuario = request.form['usuario']
         correo = request.form['correo']
-        contraseña = request.form['contraseña']
-        if not '' in [nombre,usuario,correo,contraseña] :
-            usuario_nuevo = Usuario(nombre=nombre,usuario=usuario,correo=correo,contraseña=contraseña)
+        #patron = r"([\w\.-]+)@([\w\.-]+)(\-[\w\.]+)"
+        #match = re.search(patron,correo)
+        match = True
+        contraseña = str(random.randint(0,9))+str(random.randint(0,9))+str(random.randint(0,9))+str(random.randint(0,9))
+        if not '' in [nombre,apellido,usuario,correo,contraseña] and match:
+            usuario_nuevo = Usuario(nombre=nombre,apellido=apellido,usuario=usuario,correo=correo,contraseña=contraseña)
             db.session.add(usuario_nuevo)
             db.session.commit()
             msg = Message("Se ha registrado con exito",sender=app.config['MAIL_USERNAME'],recipients=[correo])
-            msg.html = render_template('email.html',usuario = usuario)
+            msg.html = render_template('email.html', clave = contraseña)
             mail.send(msg)
         return redirect(url_for('Login'))
 
@@ -116,28 +126,36 @@ def Volver():
 @app.route('/busqueda/<int:pagina>')
 def Buscador(pagina=1):
     if 'username' in session:
-        print(session['username'])
         per_page = 25
         productos = Producto.query.add_columns(Producto.codigo,Producto.descripcion,Producto.stock,Producto.reserva,Producto.lote).order_by(Producto.descripcion).paginate(pagina,per_page,False)
-        return render_template('buscador.html',productos=productos,pagina=pagina)
+        return render_template('buscador.html',productos=productos,pagina=pagina,normal=True)
     else:
         return redirect(url_for("Login"))
 
 #PAGINA 3: BUSCADOR / TOMA LA ENTRADA DEL USUARIO PARA BUSCAR Y MOSTRAR COINCIDENCIAS
 @app.route('/busqueda/buscar', methods=['POST'])
-def Buscar():
+@app.route('/busqueda/buscar/<int:pagina>', methods=['GET','POST'])
+@app.route('/busqueda/buscar/<string:anterior>/<int:pagina>', methods=['GET','POST'])
+def Buscar(pagina=1,anterior=''):
     if request.method == 'POST':
         entrada = request.form['entrada']
-        productos = Producto.query.add_columns(Producto.codigo,Producto.descripcion,Producto.stock,Producto.reserva,Producto.lote).filter(Producto.descripcion.like(''+entrada+'%')).order_by(Producto.descripcion).paginate(1,335,False)
-        return render_template('buscador.html',productos=productos)
+        productos = Producto.query.add_columns(Producto.codigo,Producto.descripcion,Producto.stock,Producto.reserva,Producto.lote).filter(Producto.descripcion.like(''+entrada+'%')).order_by(Producto.descripcion).paginate(pagina,25,False)
+        return render_template('buscador.html',productos=productos,pagina=pagina,normal=False,entrada=entrada)
+    if request.method == 'GET':
+        productos = Producto.query.add_columns(Producto.codigo,Producto.descripcion,Producto.stock,Producto.reserva,Producto.lote).filter(Producto.descripcion.like(''+anterior+'%')).order_by(Producto.descripcion).paginate(pagina,25,False)
+        return render_template('buscador.html',productos=productos,pagina=pagina,normal=False,entrada=anterior)
 
 #PAGINA 4: DETALLE / MUESTRA EL RESTO DE DATOS DEL PRODUCTO SELECCIONADO EN EL BUSCADOR
 #DEBO CAMBIAR LA PRIMARY KEY POR EL LOTE, EN CASO DE NO TENER LOTE BUSCAR POR CODIGO
 @app.route('/detalle/<string:codigo>/<string:lote>')
 def Mostrar_detalle(codigo,lote):
     if 'username' in session:
-        producto = Producto.query.filter(Producto.lote==lote).first()
-        return render_template('detalle.html',producto=producto)
+        if lote != 'SL':
+            producto = Producto.query.filter(Producto.lote==lote).first()
+            return render_template('detalle.html',producto=producto)
+        else:
+            producto = Producto.query.filter(Producto.codigo==codigo).first()
+            return render_template('detalle.html',producto=producto)
     else:
         return redirect(url_for('Login'))
 
