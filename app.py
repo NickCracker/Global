@@ -5,14 +5,16 @@ import re
 from sqlalchemy import Integer, String
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField
+from wtforms.validators import DataRequired
 from flask import Flask
+from flask import flash
 from flask import redirect
 from flask import url_for
 from flask import render_template
 from flask import request
 from flask import session
-from werkzeug.security import generate_password_hash
-from werkzeug.security import check_password_hash
 
 #Funcion de carga de datos JSON
 route = '.conexion.json'
@@ -64,6 +66,10 @@ class Usuario(db.Model):
     usuario=db.Column(String(50))
     contraseña=db.Column(String(50))
     
+class Formulario(FlaskForm):
+    usuario = StringField("Usuario",validators=[DataRequired()])
+    contraseña = PasswordField("Contraseña",validators=[DataRequired()])
+    
 db.init_app(app)
 mail.init_app(app)
 app.secret_key=datos.get("clave","")
@@ -71,11 +77,12 @@ app.secret_key=datos.get("clave","")
 #PAGINA 1: LOGIN / RENDERIZA LA PAGINA DEL LOGIN Y ENVIA LOS DATOS
 @app.route('/')
 def Login():
+    form = Formulario()
     if 'username' in session:
         session.pop('username')
         return redirect(url_for('Login'))
     else:
-        return render_template('login.html')
+        return render_template('login.html',form=form)
 
 #PAGINA 1: LOGIN / BUSCA LOS DATOS EN LA BASE DE DATOS Y REDIRECCIONA EN FUNCION DEL RESULTADO DE LA QUERY
 @app.route('/Permitir_acceso', methods=['POST'])
@@ -83,9 +90,9 @@ def Permitir_acceso():
     if request.method == 'POST':
         usuario = request.form['usuario']
         contraseña = request.form['contraseña']
-        coincidencias = Usuario.query.filter(Usuario.usuario==usuario and Usuario.contraseña==contraseña)
+        coincidencias = Usuario.query.filter(Usuario.usuario==usuario)
         for coincidencia in coincidencias:
-            if coincidencia.nombre != '':
+            if coincidencia.contraseña == contraseña:
                 session['username']=usuario
                 return redirect(url_for('Buscador'))
         return redirect(url_for('Login'))
@@ -103,17 +110,16 @@ def Registrar():
         apellido = request.form['apellido']
         usuario = request.form['usuario']
         correo = request.form['correo']
-        #patron = r"([\w\.-]+)@([\w\.-]+)(\-[\w\.]+)"
-        #match = re.search(patron,correo)
-        match = True
         contraseña = str(random.randint(0,9))+str(random.randint(0,9))+str(random.randint(0,9))+str(random.randint(0,9))
-        if not '' in [nombre,apellido,usuario,correo,contraseña] and match:
+        if not '' in [nombre,apellido,usuario,correo,contraseña] :
             usuario_nuevo = Usuario(nombre=nombre,apellido=apellido,usuario=usuario,correo=correo,contraseña=contraseña)
             db.session.add(usuario_nuevo)
             db.session.commit()
             msg = Message("Se ha registrado con exito",sender=app.config['MAIL_USERNAME'],recipients=[correo])
             msg.html = render_template('email.html', clave = contraseña)
             mail.send(msg)
+            return redirect(url_for('Login'))
+        flash('No se ha añadido el nuevo usuario')
         return redirect(url_for('Login'))
 
 #PAGINA 2: REGISTRO / RETORNA AL LOGIN EN CASO DE QUE EL USUARIO ASI LO QUIERA

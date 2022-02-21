@@ -25,10 +25,10 @@
     <div class="detalle-container">
         <p id="codigo" style="display:none;">{{producto.codigo}}</p>
         <div class="detalle-ficha">
-            <table class="table table-striped" style="border: 2px solid #2c3e50;">
+            <table class="table table-striped" style="border: 2px solid #2c3e50; background-color:#fff">
                 <tbody>
                     <tr class="detalle-tr">
-                        <td class="detalle-td" style="color:aliceblue;justify-content:center;background-color:#00a1f1">Detalles</td>
+                        <td class="detalle-td" style="font-size:large;color:aliceblue;justify-content:center;background-color:#00a1f1">Detalles</td>
                     </tr>
                     <tr class="detalle-tr">
                         <td class="detalle-td">Codigo: {{producto.codigo}}</td>
@@ -49,14 +49,14 @@
                         <td class="detalle-td">Ubicacion : {{producto.ubicacion}}</td>
                     </tr>
                     <tr class="detalle-tr">
-                        <td class="detalle-td">Precio : ${{producto.precio | int }}</td>
+                        <td class="detalle-td">Precio : ${{producto.precio | int(10) }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div class="detalle-image">
             <button class="round" type="button" onclick="anterior()"><<</button>
-            <img id="foto" width="220px" height="220px" alt="" style="padding-right: 15px;padding-left: 15px;">
+            <img id="foto" width="240px" height="260px" alt="" style="padding:5px">
             <button class="round" type="button" onclick="siguiente()">>></button>
         </div>
     </div>
