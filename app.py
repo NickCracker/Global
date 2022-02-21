@@ -31,7 +31,7 @@ c = datos.get('password','')
 d = datos.get('driver','')
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']='mssql+pyodbc://{0}:{1}@{2}/{3}?driver={4}'.format(u,c,s,b,d)
+app.config['SQLALCHEMY_DATABASE_URI']= 'mssql+pyodbc://{0}:{1}@{2}/{3}?driver={4}'.format(u,c,s,b,d)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 app.config['MAIL_SERVER']= 'smtp.gmail.com'
 app.config['MAIL_PORT']= 587
