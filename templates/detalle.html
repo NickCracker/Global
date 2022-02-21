@@ -40,13 +40,13 @@
                         <td class="detalle-td">Subclase : {{producto.subclase}}</td>
                     </tr>
                     <tr class="detalle-tr">
-                        <td class="detalle-td">Laboratorio : {{producto.laboratorio}}</td>
+                        <td class="detalle-td">Laboratorio : {{producto.laboratorio | title}}</td>
                     </tr>
                     <tr class="detalle-tr">
-                        <td class="detalle-td">Bodega : {{producto.bodega}}</td>
+                        <td class="detalle-td">Bodega : {{producto.bodega | title}}</td>
                     </tr>
                     <tr class="detalle-tr">
-                        <td class="detalle-td">Ubicacion : {{producto.ubicacion}}</td>
+                        <td class="detalle-td">Ubicacion : {{producto.ubicacion | title}}</td>
                     </tr>
                     <tr class="detalle-tr">
                         <td class="detalle-td">Precio : ${{producto.precio | int(10) }}</td>
@@ -56,7 +56,7 @@
         </div>
         <div class="detalle-image">
             <button class="round" type="button" onclick="anterior()"><<</button>
-            <img id="foto" width="240px" height="260px" alt="" style="padding:5px">
+            <img id="foto" width="240px" height="260px" alt="" style="padding:5px" onerror="Error()">
             <button class="round" type="button" onclick="siguiente()">>></button>
         </div>
     </div>

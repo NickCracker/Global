@@ -1,7 +1,6 @@
 #Importaciones
 import json
 import random
-import re
 from sqlalchemy import Integer, String
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
@@ -33,7 +32,7 @@ d = datos.get('driver','')
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']='mssql+pyodbc://{0}:{1}@{2}/{3}?driver={4}'.format(u,c,s,b,d)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 app.config['MAIL_SERVER']= 'smtp.gmail.com'
 app.config['MAIL_PORT']= 587
 app.config['MAIL_USE_SSL']=False
@@ -70,6 +69,12 @@ class Formulario(FlaskForm):
     usuario = StringField("Usuario",validators=[DataRequired()])
     contraseña = PasswordField("Contraseña",validators=[DataRequired()])
     
+class Formulario2(FlaskForm):
+    nombre = StringField("Nombre",validators=[DataRequired()])
+    apellido = PasswordField("Apellido",validators=[DataRequired()])
+    usuario = PasswordField("Usuario",validators=[DataRequired()])
+    correo = PasswordField("Correo",validators=[DataRequired()])
+
 db.init_app(app)
 mail.init_app(app)
 app.secret_key=datos.get("clave","")
@@ -100,7 +105,8 @@ def Permitir_acceso():
 #PAGINA 2: REGISTRO / RENDERIZA LA PAGINA DEL REGISTRO Y ENVIA LOS DATOS
 @app.route('/registro')
 def Registro():
-    return render_template('registro.html')
+    form = Formulario2()
+    return render_template('registro.html',form=form)
 
 #PAGINA 2: REGISTRO / EVALUA SI LOS DATOS INGRESADOS SON VALIDOS Y REDIRECCIONA EN FUNCION DE ELLOS
 @app.route('/Registrar', methods=['POST'])

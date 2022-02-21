@@ -32,6 +32,11 @@ window.onload = function() {
     }
 }
 
+function Error() {
+    var foto = document.getElementById("foto");
+    foto.src = "https://raw.githubusercontent.com/NickCracker/Global/main/assets/image-not-found.png";
+    }
+
 var num = 1;
 
 function siguiente(){
