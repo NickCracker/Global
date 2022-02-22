@@ -27,14 +27,11 @@ window.onload = function() {
         foto.src = "https://raw.githubusercontent.com/NickCracker/Global/main/assets/Div6/"+code+"/"+code+"_1.jpg";
         posicion=6
     }
-    else{
-        foto.src = "https://raw.githubusercontent.com/NickCracker/Global/main/assets/image-not-found.png/";
-    }
 }
 
 function Error() {
     var foto = document.getElementById("foto");
-    foto.src = "https://raw.githubusercontent.com/NickCracker/Global/main/assets/image-not-found.png";
+    foto.src = "https://raw.githubusercontent.com/NickCracker/Global/main/static/img/image-not-found.png";
     }
 
 var num = 1;
